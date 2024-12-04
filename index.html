@@ -1,8 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to Discord</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #fileInput {
+            margin: 10px 0;
+        }
+    </style>
+</head>
 <body>
-<audio src="justcantgetenough.mp3" autoplay="true" controls="" preload="auto" autobuffer=""></audio>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <h1>Send an Image to Discord</h1>
+    <form id="imageForm">
+        <label for="fileInput">Choose an image:</label>
+        <input type="file" id="fileInput" accept="image/*" required>
+        <button type="submit">Send to Discord</button>
+    </form>
+    <p id="status"></p>
+
+    <script>
+        const webhookUrl = "https://discord.com/api/webhooks/1313973747782520934/neLZ-OJIA5P62Bnu9QyrxAl9P0oz50Kvz2DfqdftJjeo1GfPBy7MLAvYUggeQzPso4IQ"; // Replace with your webhook URL
+
+        const form = document.getElementById("imageForm");
+        const fileInput = document.getElementById("fileInput");
+        const statusText = document.getElementById("status");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault(); // Prevent form from refreshing the page
+            const file = fileInput.files[0];
+
+            if (!file) {
+                statusText.textContent = "Please select a file!";
+                return;
+            }
+
+            statusText.textContent = "Sending...";
+
+            try {
+                const formData = new FormData();
+                formData.append("file", file); // Add the file to the form data
+
+                const response = await fetch(webhookUrl, {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    statusText.textContent = "Image sent successfully!";
+                } else {
+                    statusText.textContent = `Failed to send image: ${response.statusText}`;
+                }
+            } catch (error) {
+                statusText.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
 </body>
 </html>
